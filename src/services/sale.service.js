@@ -9,10 +9,7 @@ export class SaleService {
 
   async create(data) {
     const [sale] = await db('sales')
-      .insert({
-        ...data,
-        status: 'waiting_contract'
-      })
+      .insert(data)
       .returning('*');
 
     return sale;
