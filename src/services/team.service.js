@@ -4,29 +4,26 @@ export class TeamService {
   async list() {
     return db('teams')
       .select('*')
-      .leftJoin('users', 'users.id', 'teams.leaderId')
-      .orderBy('teams.name');
+      .orderBy('name');
   }
 
   async create(data) {
     const [team] = await db('teams')
       .insert(data)
       .returning('*');
-
     return team;
   }
 
   async findById(id) {
     const team = await db('teams')
       .select('*')
-      .leftJoin('users', 'users.id', 'teams.leaderId')
-      .where('teams.id', id)
+      .where({ id })
       .first();
 
     if (!team) return null;
 
     const members = await db('users')
-      .select('id', 'name', 'email', 'role', 'active', 'createdAt', 'lastLogin','teamId')
+      .select('*')
       .where('teamId', id)
       .orderBy('name');
 

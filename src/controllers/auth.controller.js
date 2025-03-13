@@ -19,7 +19,8 @@ export class AuthController {
           id: user.id,
           email: user.email,
           role: user.role,
-          teamId: user.teamId
+          teamId: user.teamId,
+          lastLogin: user.lastLogin
         },
         process.env.JWT_SECRET,
         { expiresIn: '1d' }
@@ -33,7 +34,8 @@ export class AuthController {
           email: user.email,
           role: user.role,
           createdAt: user.createdAt,
-          teamId: user.teamId
+          teamId: user.teamId,
+          lastLogin: user.lastLogin
         }
       });
     } catch (error) {

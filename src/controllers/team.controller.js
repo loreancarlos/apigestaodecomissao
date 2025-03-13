@@ -16,7 +16,7 @@ export class TeamController {
 
   create = async (req, res) => {
     try {
-      const data = req.body;
+      const data = req.body; 
       const team = await this.teamService.create(data);
       return res.status(201).json(team);
     } catch (error) {
@@ -84,5 +84,5 @@ export class TeamController {
     } catch (error) {
       return res.status(500).json({ error: 'Erro interno do servidor' });
     }
-  }
+  } 
 }
