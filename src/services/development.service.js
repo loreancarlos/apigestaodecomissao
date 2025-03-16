@@ -11,7 +11,6 @@ export class DevelopmentService {
     const [development] = await db('developments')
       .insert(data)
       .returning('*');
-
     return development;
   }
 
