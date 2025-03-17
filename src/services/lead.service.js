@@ -1,4 +1,5 @@
 import db from '../database/connection.js';
+import { wsManager } from '../websocket/websocketServer.js';
 
 export class LeadService {
   async list(brokerId = null, teamId = null) {
@@ -23,9 +24,13 @@ export class LeadService {
     if (data.developmentsInterest.length == 0) {
       throw new Error('LEAD_DONT_HAS_DEVELOPMENTS');
     }
+
     const [lead] = await db('leads')
       .insert(data)
       .returning('*');
+
+    // Notificar todos os clientes conectados sobre o novo lead
+    wsManager.broadcastUpdate('NEW_LEAD', lead);
 
     return lead;
   }

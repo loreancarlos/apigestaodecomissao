@@ -1,4 +1,5 @@
 import db from '../database/connection.js';
+import { wsManager } from '../websocket/websocketServer.js';
 
 export class BusinessService {
    async list(brokerId = null, teamId = null) {
@@ -34,8 +35,13 @@ export class BusinessService {
          .insert(data)
          .returning('*');
 
+      // Buscar dados completos do business para enviar na notificação
+      const businessComplete = await this.findById(business.id);
 
-      return this.findById(business.id);
+      // Notificar todos os clientes conectados sobre o novo business
+      wsManager.broadcastUpdate('NEW_BUSINESS', businessComplete);
+
+      return businessComplete;
    }
 
    async findById(id, brokerId = null) {

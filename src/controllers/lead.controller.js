@@ -39,6 +39,8 @@ export class LeadController {
         brokerId: (role === 'broker' || role === 'teamLeader') ? id : req.body.brokerId
       };
       const lead = await this.leadService.create(data);
+      // Notificar todos os clientes conectados sobre o novo lead
+      wsManager.broadcastUpdate('NEW_LEAD', lead);
       // Criar um negócio para cada empreendimento selecionado
       if (req.body.developmentsInterest) {
         lead.developmentsInterest.map(
