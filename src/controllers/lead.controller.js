@@ -34,12 +34,11 @@ export class LeadController {
         ...req.body,
         brokerId: (role === 'broker' || role === 'teamLeader') ? id : req.body.brokerId
       };
-
       const lead = await this.leadService.create(data);
       return res.status(201).json(lead);
     } catch (error) {
-      if (error.message.includes('Lead must be assigned to a broker or team leader')) {
-        return res.status(400).json({ error: 'Lead deve ser atribuído a um corretor ou líder de equipe' });
+      if (error.message == 'LEAD_DONT_HAS_DEVELOPMENTS') {
+        return res.status(400).json({ error: 'Nenhum empreendimento selecionado!' });
       }
       return res.status(500).json({ error: 'Erro interno do servidor' });
     }
@@ -108,6 +107,9 @@ export class LeadController {
 
       return res.json({ message: 'Lead deletado com sucesso' });
     } catch (error) {
+      if (error.message === 'LEAD_HAS_BUSINESS') {
+        return res.status(400).json({ error: 'Lead possui negócio e não pode ser excluído!' });
+      }
       return res.status(500).json({ error: 'Erro interno do servidor' });
     }
   }

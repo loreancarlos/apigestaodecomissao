@@ -66,8 +66,8 @@ export class ClientController {
       await this.clientService.delete(req.params.id);
       return res.json({ message: 'Cliente deletado com sucesso' });
     } catch (error) {
-      if (error.message === 'CLIENT_HAS_RECEIVABLES') {
-        return res.status(400).json({ error: 'Cliente possui recebíveis e não pode ser excluído' });
+      if (error.message === 'CLIENT_HAS_SALES') {
+        return res.status(400).json({ error: 'Cliente possui venda e não pode ser excluído!' });
       }
       return res.status(500).json({ error: 'Erro interno do servidor' });
     }

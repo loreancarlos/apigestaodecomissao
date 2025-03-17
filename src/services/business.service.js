@@ -33,6 +33,7 @@ export class BusinessService {
          .insert(data)
          .returning('*');
 
+
       return this.findById(business.id);
    }
 
@@ -58,7 +59,7 @@ export class BusinessService {
    }
 
    async findByIdForTeamLeader(id, leaderId, teamId) {
-      const business = await db('business')
+      return db('business')
          .select(
             'business.*',
             'leads.name as leadName',
@@ -77,8 +78,6 @@ export class BusinessService {
                });
          })
          .first();
-
-      return business;
    }
 
    async update(id, data, brokerId = null) {

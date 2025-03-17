@@ -29,18 +29,10 @@ export class BusinessController {
 
    create = async (req, res) => {
       try {
-         const { role, id } = req.user;
-         const data = {
-            ...req.body,
-            brokerId: (role === 'broker' || role === 'teamLeader') ? id : req.body.brokerId
-         };
-
+         const data = req.body;
          const business = await this.businessService.create(data);
          return res.status(201).json(business);
       } catch (error) {
-         if (error.message.includes('Business must be assigned to a broker or team leader')) {
-            return res.status(400).json({ error: 'Negócio deve ser atribuído a um corretor ou líder de equipe' });
-         }
          return res.status(500).json({ error: 'Erro interno do servidor' });
       }
    }

@@ -20,6 +20,9 @@ export class LeadService {
   }
 
   async create(data) {
+    if (data.developmentsInterest.length == 0) {
+      throw new Error('LEAD_DONT_HAS_DEVELOPMENTS');
+    }
     const [lead] = await db('leads')
       .insert(data)
       .returning('*');
@@ -91,6 +94,13 @@ export class LeadService {
   }
 
   async delete(id, brokerId = null) {
+    const hasBusiness = await db('business')
+      .where({ leadId: id })
+      .first();
+    if (hasBusiness) {
+      throw new Error('LEAD_HAS_BUSINESS');
+    }
+
     let query = db('leads').where({ id });
 
     if (brokerId) {
