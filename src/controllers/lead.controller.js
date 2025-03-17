@@ -32,6 +32,7 @@ export class LeadController {
 
   create = async (req, res) => {
     try {
+
       const { role, id } = req.user;
       const data = {
         name: req.body.name,
@@ -39,27 +40,58 @@ export class LeadController {
         developmentsInterest: req.body.developmentsInterest,
         brokerId: (role === 'broker' || role === 'teamLeader') ? id : req.body.brokerId
       };
-      const lead = await this.leadService.create(data);
-      // Notificar todos os clientes conectados sobre o novo lead
-      wsManager.broadcastUpdate('NEW_LEAD', lead);
-      // Criar um negócio para cada empreendimento selecionado
-      if (req.body.developmentsInterest) {
-        lead.developmentsInterest.map(
-          async (developmentId) => {
-            const dataBusiness = {
-              leadId: lead.id,
-              developmentId,
-              source: req.body.source,
-              status: "new",
-            };
-            await this.businessService.create(dataBusiness);
-          }
-        );
+
+      const existPhoneLead = await this.leadService.findByPhone(req.body.phone);
+      if (existPhoneLead) {
+        const haveBusinessWithDevelopments = await this.businessService.findByLeadId(existPhoneLead.id);
+        if (haveBusinessWithDevelopments) {
+          haveBusinessWithDevelopments.map(async (business) => {
+            if (business.developmentId == req.body.developmentsInterest) {
+              throw new Error('LEAD_DUPLICATED_AND_HAS_THIS_DEVELOPMENT');
+            } else {
+              const dataBusiness = {
+                leadId: existPhoneLead.id,
+                developmentId: req.body.developmentsInterest,
+                source: req.body.source,
+                status: "new",
+              };
+              await this.businessService.create(dataBusiness);
+            }
+          });
+        } else {
+          const dataBusiness = {
+            leadId: existPhoneLead.id,
+            developmentId: req.body.developmentsInterest,
+            source: req.body.source,
+            status: "new",
+          };
+          await this.businessService.create(dataBusiness);
+        }
+      } else {
+        const lead = await this.leadService.create(data);
+        // Notificar todos os clientes conectados sobre o novo lead
+        wsManager.broadcastUpdate('NEW_LEAD', lead);
+        // Criar um negócio para cada empreendimento selecionado
+        if (req.body.developmentsInterest) {
+          lead.developmentsInterest.map(
+            async (developmentId) => {
+              const dataBusiness = {
+                leadId: lead.id,
+                developmentId,
+                source: req.body.source,
+                status: "new",
+              };
+              await this.businessService.create(dataBusiness);
+            }
+          );
+        }
       }
       return res.status(201).json(lead);
     } catch (error) {
       if (error.message == 'LEAD_DONT_HAS_DEVELOPMENTS') {
         return res.status(400).json({ error: 'Nenhum empreendimento selecionado!' });
+      } else if (error.message == 'LEAD_DUPLICATED_AND_HAS_THIS_DEVELOPMENT') {
+        return res.status(409).json({ error: 'Lead já cadastrado e contendo negócio ativo com este empreendimento!' });
       }
       return res.status(500).json({ error: 'Erro interno do servidor' });
     }

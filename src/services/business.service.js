@@ -44,6 +44,21 @@ export class BusinessService {
       return businessComplete;
    }
 
+   async findByLeadId(id) {
+      return db('business')
+         .select(
+            'business.*',
+            'leads.name as leadName',
+            'leads.phone as leadPhone',
+            'users.name as brokerName',
+            'developments.name as developmentName'
+         )
+         .leftJoin('leads', 'leads.id', 'business.leadId')
+         .leftJoin('users', 'users.id', 'leads.brokerId')
+         .leftJoin('developments', 'developments.id', 'business.developmentId')
+         .where('business.leadId', id);
+   }
+
    async findById(id, brokerId = null) {
       let query = db('business')
          .select(

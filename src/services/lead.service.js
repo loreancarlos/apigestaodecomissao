@@ -35,6 +35,13 @@ export class LeadService {
     return lead;
   }
 
+  async findByPhone(phone) {
+    return db('leads')
+      .select('*')
+      .where('leads.phone', phone)
+      .first();
+  }
+
   async findById(id, brokerId = null) {
     let query = db('leads')
       .select('*')
