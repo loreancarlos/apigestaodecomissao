@@ -43,7 +43,6 @@ export class LeadController {
       if (req.body.developmentsInterest) {
         lead.developmentsInterest.map(
           async (developmentId) => {
-            console.log("ENTREI 2");
             const dataBusiness = {
               leadId: lead.id,
               developmentId,
