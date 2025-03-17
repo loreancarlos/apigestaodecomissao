@@ -13,7 +13,8 @@ export class BusinessService {
          .leftJoin('leads', 'leads.id', 'business.leadId')
          .leftJoin('users', 'users.id', 'leads.brokerId')
          .leftJoin('developments', 'developments.id', 'business.developmentId')
-         .orderBy('business.createdAt', 'desc');
+         .orderBy('business.scheduledAt', 'asc')
+         .orderBy('business.recallAt', 'asc');
 
       if (brokerId) {
          query = query.where('leads.brokerId', brokerId);
@@ -91,11 +92,14 @@ export class BusinessService {
 
       const [business] = await query
          .update({
-            ...data,
+            source: data.source,
+            status: data.status,
+            scheduledAt: data.scheduledAt,
+            recallAt: data.recallAt,
+            notes: data.notes,
             updatedAt: db.fn.now()
          })
          .returning('*');
-
       if (!business) return null;
 
       return this.findById(business.id);

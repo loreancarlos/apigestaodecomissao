@@ -1,8 +1,10 @@
 import { LeadService } from '../services/lead.service.js';
+import { BusinessService } from '../services/business.service.js';
 
 export class LeadController {
   constructor() {
     this.leadService = new LeadService();
+    this.businessService = new BusinessService();
   }
 
   list = async (req, res) => {
@@ -31,10 +33,24 @@ export class LeadController {
     try {
       const { role, id } = req.user;
       const data = {
-        ...req.body,
+        name: req.body.name,
+        phone: req.body.phone,
+        developmentsInterest: req.body.developmentsInterest,
         brokerId: (role === 'broker' || role === 'teamLeader') ? id : req.body.brokerId
       };
       const lead = await this.leadService.create(data);
+      // Criar um negócio para cada empreendimento selecionado
+      if (req.body.developmentsInterest) {
+        req.body.developmentsInterest.map(
+          async (developmentId) =>
+            await this.businessService.create({
+              leadId: lead.id,
+              developmentId,
+              source: req.body.source,
+              status: "new",
+            })
+        );
+      }
       return res.status(201).json(lead);
     } catch (error) {
       if (error.message == 'LEAD_DONT_HAS_DEVELOPMENTS') {
