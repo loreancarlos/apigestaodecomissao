@@ -41,14 +41,17 @@ export class LeadController {
       const lead = await this.leadService.create(data);
       // Criar um negócio para cada empreendimento selecionado
       if (req.body.developmentsInterest) {
-        req.body.developmentsInterest.map(
-          async (developmentId) =>
-            await this.businessService.create({
+        lead.developmentsInterest.map(
+          async (developmentId) => {
+            console.log("ENTREI 2");
+            const dataBusiness = {
               leadId: lead.id,
               developmentId,
               source: req.body.source,
               status: "new",
-            })
+            };
+            await this.businessService.create(dataBusiness);
+          }
         );
       }
       return res.status(201).json(lead);
