@@ -34,7 +34,6 @@ export class BusinessService {
       const [business] = await db('business')
          .insert(data)
          .returning('*');
-
       // Buscar dados completos do business para enviar na notificação
       const businessComplete = await this.findById(business.id);
 
