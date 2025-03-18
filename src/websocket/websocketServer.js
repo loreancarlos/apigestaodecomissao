@@ -46,7 +46,7 @@ class WebSocketManager {
   // Enviar atualização para todos os clientes conectados
   broadcastUpdate(type, data) {
     const message = JSON.stringify({ type, data });
-    
+    console.log(message);
     for (const connections of this.clients.values()) {
       for (const client of connections) {
         if (client.readyState === WebSocket.OPEN) {
@@ -62,7 +62,7 @@ class WebSocketManager {
     if (!connections) return;
 
     const message = JSON.stringify({ type, data });
-    
+
     for (const client of connections) {
       if (client.readyState === WebSocket.OPEN) {
         client.send(message);

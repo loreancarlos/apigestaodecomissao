@@ -14,6 +14,7 @@ export class BusinessService {
          .leftJoin('leads', 'leads.id', 'business.leadId')
          .leftJoin('users', 'users.id', 'leads.brokerId')
          .leftJoin('developments', 'developments.id', 'business.developmentId')
+         .orderBy('business.createdAt', 'asc')
          .orderBy('business.scheduledAt', 'asc')
          .orderBy('business.recallAt', 'asc');
 

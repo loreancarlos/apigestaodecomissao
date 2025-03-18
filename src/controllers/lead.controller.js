@@ -63,7 +63,7 @@ export class LeadController {
             source: req.body.source,
             status: "new",
           };
-          await this.businessService.create(businessData);
+          const res = await this.businessService.create(businessData);
         }
 
         return res.status(200).json(existingLead);
@@ -73,7 +73,6 @@ export class LeadController {
       if (!data.developmentsInterest || data.developmentsInterest.length === 0) {
         throw new Error('LEAD_DONT_HAS_DEVELOPMENTS');
       }
-
       const lead = await this.leadService.create(data);
 
       // Notificar todos os clientes conectados sobre o novo lead
@@ -87,7 +86,9 @@ export class LeadController {
           source: req.body.source,
           status: "new",
         };
-        await this.businessService.create(businessData);
+        const business = await this.businessService.create(businessData);
+        wsManager.broadcastUpdate('NEW_BUSINESS', business);
+
       }
 
       return res.status(201).json(lead);

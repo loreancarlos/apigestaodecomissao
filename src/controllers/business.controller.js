@@ -21,10 +21,6 @@ export class BusinessController {
          } else {
             businesses = await this.businessService.list(id);
          }
-
-         // Notificar todos os clientes conectados sobre o novo business
-         wsManager.broadcastUpdate('NEW_BUSINESS', businesses);
-
          return res.json(businesses);
       } catch (error) {
          return res.status(500).json({ error: 'Erro interno do servidor' });
@@ -35,6 +31,8 @@ export class BusinessController {
       try {
          const data = req.body;
          const business = await this.businessService.create(data);
+         // Notificar todos os clientes conectados sobre o novo business
+         wsManager.broadcastUpdate('NEW_BUSINESS', businesses);
          return res.status(201).json(business);
       } catch (error) {
          return res.status(500).json({ error: 'Erro interno do servidor' });
