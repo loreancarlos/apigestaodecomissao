@@ -1,4 +1,5 @@
 import { BusinessService } from '../services/business.service.js';
+import { wsManager } from '../websocket/websocketServer.js';
 
 export class BusinessController {
    constructor() {
@@ -20,6 +21,9 @@ export class BusinessController {
          } else {
             businesses = await this.businessService.list(id);
          }
+
+         // Notificar todos os clientes conectados sobre o novo business
+         wsManager.broadcastUpdate('NEW_BUSINESS', businesses);
 
          return res.json(businesses);
       } catch (error) {
