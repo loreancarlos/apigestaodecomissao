@@ -4,7 +4,7 @@ export function up(knex) {
          table.uuid('id').primary().defaultTo(knex.raw('gen_random_uuid()'));
          table.uuid('leadId').notNullable().references('id').inTable('leads').onDelete('CASCADE');
          table.uuid('developmentId').notNullable().references('id').inTable('developments').onDelete('CASCADE');
-         table.enum('source', ['indication', 'organic', 'website', 'paidTraffic', 'doorToDoor', 'tent']).notNullable();
+         table.enum('source', ['indication', 'organic', 'website', 'paidTraffic', 'doorToDoor', 'tent', 'importedList']).notNullable();
          table.enum('status', ['new', 'recall', 'whatsapp', 'scheduled']).notNullable().defaultTo('new');
          table.timestamp('scheduledAt');
          table.timestamp('recallAt');
