@@ -5,7 +5,7 @@ import { adminMiddleware } from '../middlewares/admin.middleware.js';
 const userRoutes = Router();
 const userController = new UserController();
 
-userRoutes.get('/', adminMiddleware, userController.list);
+userRoutes.get('/', userController.list);
 userRoutes.post('/', adminMiddleware, userController.create);
 userRoutes.get('/:id', adminMiddleware, userController.show);
 userRoutes.put('/:id', adminMiddleware, userController.update);
