@@ -127,7 +127,6 @@ export class LeadController {
     try {
       const { role, id, teamId } = req.user;
       let lead;
-
       if (role === 'admin') {
         lead = await this.leadService.update(req.params.id, req.body);
       } else if (role === 'teamLeader') {
@@ -139,7 +138,6 @@ export class LeadController {
       if (!lead) {
         return res.status(404).json({ error: 'Lead não encontrado' });
       }
-
       return res.json(lead);
     } catch (error) {
       if (error.message.includes('Lead must be assigned to a broker or team leader')) {

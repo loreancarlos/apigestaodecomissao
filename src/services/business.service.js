@@ -116,7 +116,8 @@ export class BusinessService {
             scheduledAt: data.scheduledAt,
             recallAt: data.recallAt,
             notes: data.notes,
-            updatedAt: db.fn.now()
+            updatedAt: db.fn.now(),
+            lastCallAt: data.lastCallAt,
          })
          .returning('*');
       if (!business) return null;

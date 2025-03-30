@@ -32,7 +32,7 @@ export class BusinessController {
          const data = req.body;
          const business = await this.businessService.create(data);
          // Notificar todos os clientes conectados sobre o novo business
-         wsManager.broadcastUpdate('NEW_BUSINESS', businesses);
+         wsManager.broadcastUpdate('NEW_BUSINESS', business);
          return res.status(201).json(business);
       } catch (error) {
          return res.status(500).json({ error: 'Erro interno do servidor' });
@@ -77,7 +77,6 @@ export class BusinessController {
          if (!business) {
             return res.status(404).json({ error: 'Negócio não encontrado' });
          }
-
          return res.json(business);
       } catch (error) {
          if (error.message.includes('Business must be assigned to a broker or team leader')) {
@@ -100,30 +99,6 @@ export class BusinessController {
          }
 
          return res.json({ message: 'Negócio deletado com sucesso' });
-      } catch (error) {
-         return res.status(500).json({ error: 'Erro interno do servidor' });
-      }
-   }
-
-   updateStatus = async (req, res) => {
-      try {
-         const { role, id, teamId } = req.user;
-         const { status } = req.body;
-         let business;
-
-         if (role === 'admin') {
-            business = await this.businessService.updateStatus(req.params.id, status);
-         } else if (role === 'teamLeader') {
-            business = await this.businessService.updateStatusForTeamLeader(req.params.id, status, id, teamId);
-         } else {
-            business = await this.businessService.updateStatus(req.params.id, status, id);
-         }
-
-         if (!business) {
-            return res.status(404).json({ error: 'Negócio não encontrado' });
-         }
-
-         return res.json(business);
       } catch (error) {
          return res.status(500).json({ error: 'Erro interno do servidor' });
       }

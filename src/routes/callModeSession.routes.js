@@ -6,5 +6,6 @@ const callModeSessionController = new CallModeSessionController();
 
 callModeSessionRoutes.post('/', callModeSessionController.create);
 callModeSessionRoutes.get('/', callModeSessionController.list);
+callModeSessionRoutes.put('/:id', callModeSessionController.update);
 
 export { callModeSessionRoutes };

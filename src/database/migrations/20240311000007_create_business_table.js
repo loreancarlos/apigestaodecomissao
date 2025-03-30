@@ -5,9 +5,10 @@ export function up(knex) {
          table.uuid('leadId').notNullable().references('id').inTable('leads').onDelete('CASCADE');
          table.uuid('developmentId').notNullable().references('id').inTable('developments').onDelete('CASCADE');
          table.enum('source', ['indication', 'organic', 'website', 'paidTraffic', 'doorToDoor', 'tent', 'importedList']).notNullable();
-         table.enum('status', ['new', 'recall', 'whatsapp', 'scheduled']).notNullable().defaultTo('new');
+         table.enum('status', ['new', 'recall', 'whatsapp', 'scheduled', 'lost']).notNullable().defaultTo('new');
          table.timestamp('scheduledAt');
          table.timestamp('recallAt');
+         table.timestamp('lastCallAt');
          table.text('notes');
          table.timestamp('createdAt').notNullable().defaultTo(knex.fn.now());
          table.timestamp('updatedAt').notNullable().defaultTo(knex.fn.now());

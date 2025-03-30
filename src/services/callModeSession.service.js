@@ -14,4 +14,13 @@ export class CallModeSessionService {
          .where({ userId })
          .orderBy('createdAt', 'desc');
    }
+
+   async update(id, data) {
+      const [session] = await db('callModeSessions')
+         .where({ id })
+         .update(data)
+         .returning('*');
+
+      return session;
+   }
 }
