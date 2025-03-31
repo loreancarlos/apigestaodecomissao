@@ -33,8 +33,7 @@ export class CallModeSessionController {
 
    list = async (req, res) => {
       try {
-         const userId = req.user.id;
-         const sessions = await this.callModeSessionService.list(userId);
+         const sessions = await this.callModeSessionService.list();
          return res.json(sessions);
       } catch (error) {
          return res.status(500).json({ error: 'Erro interno do servidor' });

@@ -9,9 +9,9 @@ export class CallModeSessionService {
       return session;
    }
 
-   async list(userId) {
+   async list() {
       return db('callModeSessions')
-         .where({ userId })
+         .select('*')
          .orderBy('createdAt', 'desc');
    }
 
