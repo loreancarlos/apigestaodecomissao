@@ -64,12 +64,10 @@ export class BusinessController {
 
    update = async (req, res) => {
       try {
-         const { role, id, teamId } = req.user;
+         const { role, id } = req.user;
          let business;
          if (role === 'admin') {
             business = await this.businessService.update(req.params.id, req.body);
-         } else if (role === 'teamLeader') {
-            business = await this.businessService.updateForTeamLeader(req.params.id, req.body, id, teamId);
          } else {
             business = await this.businessService.update(req.params.id, req.body, id);
          }
