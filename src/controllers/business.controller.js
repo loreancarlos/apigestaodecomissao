@@ -66,7 +66,7 @@ export class BusinessController {
       try {
          const { role, id } = req.user;
          let business;
-         if (role === 'admin') {
+         if (role === 'admin' || role === 'teamLeader') {
             business = await this.businessService.update(req.params.id, req.body);
          } else {
             business = await this.businessService.update(req.params.id, req.body, id);
