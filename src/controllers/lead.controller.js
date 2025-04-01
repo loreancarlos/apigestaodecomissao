@@ -125,12 +125,10 @@ export class LeadController {
 
   update = async (req, res) => {
     try {
-      const { role, id, teamId } = req.user;
+      const { role, id } = req.user;
       let lead;
-      if (role === 'admin') {
+      if (role === 'admin' || role === 'teamLeader') {
         lead = await this.leadService.update(req.params.id, req.body);
-      } else if (role === 'teamLeader') {
-        lead = await this.leadService.updateForTeamLeader(req.params.id, req.body, id, teamId);
       } else {
         lead = await this.leadService.update(req.params.id, req.body, id);
       }
