@@ -20,7 +20,7 @@ export class LeadController {
         // Busca tanto os leads da equipe quanto os leads pessoais do líder
         const teamLeads = await this.leadService.list(null, teamId);
         const personalLeads = await this.leadService.list(id);
-        leads = [...teamLeads, ...personalLeads];
+        leads = Array.from(new Map([...teamLeads, ...personalLeads].map(lead => [lead.id, lead])).values());;
       } else {
         leads = await this.leadService.list(id);
       }
@@ -38,7 +38,7 @@ export class LeadController {
         name: req.body.name,
         phone: req.body.phone,
         developmentsInterest: req.body.developmentsInterest,
-        brokerId: (role === 'broker' || role === 'teamLeader') ? id : req.body.brokerId
+        brokerId: (role === 'broker') ? id : req.body.brokerId
       };
 
       // Verifica se o lead já existe pelo telefone

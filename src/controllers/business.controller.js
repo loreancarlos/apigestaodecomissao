@@ -10,14 +10,13 @@ export class BusinessController {
       try {
          const { role, id, teamId } = req.user;
          let businesses;
-
          if (role === 'admin') {
             businesses = await this.businessService.list();
          } else if (role === 'teamLeader') {
             // Busca tanto os negócios da equipe quanto os negócios pessoais do líder
             const teamBusinesses = await this.businessService.list(null, teamId);
             const personalBusinesses = await this.businessService.list(id);
-            businesses = [...teamBusinesses, ...personalBusinesses];
+            businesses = Array.from(new Map([...teamBusinesses, ...personalBusinesses].map(business => [business.id, business])).values());;
          } else {
             businesses = await this.businessService.list(id);
          }
