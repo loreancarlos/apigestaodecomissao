@@ -78,4 +78,16 @@ export class UserController {
       return res.status(500).json({ error: 'Erro interno do servidor' });
     }
   }
+
+  updateGoogleCalendar = async (req, res) => {
+    try {
+      const user = await this.userService.updateGoogleCalendar(req.params.id, req.body);
+      if (!user) {
+        return res.status(404).json({ error: 'Usuário não encontrado' });
+      }
+      return res.json(user);
+    } catch (error) {
+      return res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+  }
 }

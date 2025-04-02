@@ -56,4 +56,16 @@ export class UserService {
 
     return user;
   }
+
+  async updateGoogleCalendar(id, data) {
+    const [user] = await db('users')
+      .where({ id })
+      .update({
+        google_calendar_token: data.accessToken || db.raw('google_calendar_token'),
+        google_calendar_id: data.selectedCalendarId === null ? null : (data.selectedCalendarId || db.raw('google_calendar_id'))
+      })
+      .returning('*');
+
+    return user;
+  }
 }

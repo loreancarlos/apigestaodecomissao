@@ -87,10 +87,8 @@ export class BusinessController {
       try {
          const { role, id, teamId } = req.user;
 
-         if (role === 'admin') {
+         if (role === 'admin' || role === 'teamLeader') {
             await this.businessService.delete(req.params.id);
-         } else if (role === 'teamLeader') {
-            await this.businessService.deleteForTeamLeader(req.params.id, id, teamId);
          } else {
             await this.businessService.delete(req.params.id, id);
          }

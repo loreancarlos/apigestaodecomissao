@@ -20,7 +20,8 @@ export class AuthController {
           email: user.email,
           role: user.role,
           teamId: user.teamId,
-          lastLogin: user.lastLogin
+          lastLogin: user.lastLogin,
+          google_calendar_token: user.google_calendar_token
         },
         process.env.JWT_SECRET,
         { expiresIn: '1d' }
@@ -35,7 +36,8 @@ export class AuthController {
           role: user.role,
           createdAt: user.createdAt,
           teamId: user.teamId,
-          lastLogin: user.lastLogin
+          lastLogin: user.lastLogin,
+          google_calendar_token: user.google_calendar_token
         }
       });
     } catch (error) {
